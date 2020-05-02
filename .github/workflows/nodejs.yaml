@@ -1,0 +1,35 @@
+name: Node.js
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      CI: "true"
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.16.0"
+
+      - name: Cache npm dependencies
+        id: cache-dependencies
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.json') }}
+
+      - name: Install dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: yarn
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test
