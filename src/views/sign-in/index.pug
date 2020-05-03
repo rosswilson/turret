@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+  .container
+    .row.mt-5.mb-5
+      .col-md-6.offset-md-3
+        h1 Sign In
+
+        p.lead Example sign in screen, with validation.
+
+        if error
+          div(role="alert").alert.alert-danger.mt-4.mb-4= error
+
+        form(method='POST' action='/sign-in' novalidate)
+          div.form-group
+            label(for='email') Email
+            input#email.form-control(type='email' name='email' required)
+
+          div.form-group
+            label(for='password') Password
+            input#password.form-control(type='password' required name='password')
+
+          button.btn.btn-primary(type='submit') Sign In
+
+          a(href="/").btn.btn-link Cancel

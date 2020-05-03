@@ -26,7 +26,7 @@ async function create(payload) {
     },
   };
 
-  console.debug("Recording user in database", JSON.stringify({ params }));
+  console.debug("Recording user in database", params);
 
   try {
     await documentClient.put(params).promise();

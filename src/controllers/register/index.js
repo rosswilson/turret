@@ -1,6 +1,7 @@
 const validate = require("../../dal/register/validate");
 const persist = require("../../dal/register/persist");
 const { generateSsoToken } = require("../../dal/sign-in");
+const { setSsoTokenCookie } = require("../helpers");
 
 const TITLE = "Register | Turret";
 
@@ -29,7 +30,7 @@ async function create(request, response) {
 
     return render(response, {
       initialValues: value,
-      error: "Oops, please complete all the fields",
+      error: "Oops, please complete all the fields.",
     });
   }
 
@@ -38,12 +39,7 @@ async function create(request, response) {
 
     const token = await generateSsoToken(userId);
 
-    response.cookie("turret-sso", token, {
-      maxAge: 1000 * 60 * 60 * 24 * 365 * 2,
-      httpOnly: true,
-      sameSite: "lax",
-      secure: true,
-    });
+    setSsoTokenCookie(response, token);
 
     return response.redirect("/");
   } catch (error) {
