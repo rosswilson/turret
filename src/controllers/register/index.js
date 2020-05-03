@@ -3,8 +3,8 @@ const persist = require("../../dal/register/persist");
 
 const TITLE = "Register | Turret";
 
-function render(response, options) {
-  const { initialValues, error } = options;
+function render(response, options = {}) {
+  const { initialValues = {}, error } = options;
 
   response.render("register/index", {
     title: TITLE,
@@ -15,7 +15,7 @@ function render(response, options) {
 }
 
 function index(request, response) {
-  render(response);
+  return render(response);
 }
 
 async function create(request, response) {
@@ -35,7 +35,7 @@ async function create(request, response) {
   try {
     await persist(value);
 
-    response.redirect("/");
+    return response.redirect("/");
   } catch (error) {
     response.status(500);
 
