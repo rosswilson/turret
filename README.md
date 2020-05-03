@@ -16,6 +16,19 @@ An open authentication and authorisation platform.
 - Validation
 - Persistance to DynamoDB
   - Generating a UUID identifier for every user
+  - Downcases email address for case-insensitive searching
+- Issuing of a Single Sign On token (JWT), signed with a private key
+
+### Sign In
+
+<a href="./docs/screenshots/sign-in.png">
+  <img src="./docs/screenshots/sign-in.png" alt="sign-in form with email and password fields" width="300">
+</a>
+
+- Form
+- Validation
+- Defence against timing attacks when comparing password hashes
+- Issuing of a Single Sign On token (JWT), signed with a private key
 
 ## Getting Started
 
