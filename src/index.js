@@ -12,7 +12,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.resolve(__dirname, "views"));
 
 app.use(helmet());
 
@@ -20,9 +20,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(router);
 
+function readRelativeFile(relativePath) {
+  return fs.readFileSync(path.resolve(__dirname, relativePath));
+}
+
 const options = {
-  key: fs.readFileSync("./certs/tls/turret.localhost-key.pem"),
-  cert: fs.readFileSync("./certs/tls/turret.localhost.pem"),
+  key: readRelativeFile("../certs/tls/turret.localhost-key.pem"),
+  cert: readRelativeFile("../certs/tls/turret.localhost.pem"),
 };
 
 https
