@@ -36,7 +36,7 @@ async function create(request, response) {
 
     setSsoTokenCookie(response, token);
 
-    response.redirect("/");
+    return response.redirect("/");
   }
 
   response.status(401);
