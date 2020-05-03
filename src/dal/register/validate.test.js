@@ -1,6 +1,6 @@
 const validatePayload = require("./validate");
 
-describe("Validate Payload", () => {
+describe("Validate User", () => {
   const validPayload = {
     name: "Ross Wilson",
     email: "ross@example.com",
