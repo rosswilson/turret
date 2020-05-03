@@ -42,6 +42,26 @@ aws --endpoint-url http://localhost:8000 dynamodb create-table \
     --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
 ```
 
+Generate a ECDSA key pair (used for signing tokens):
+
+```
+mkdir -p ./certs/signing
+openssl ecparam -out certs/signing/ec_key.pem -name prime256v1 -genkey
+openssl req -new -x509 -key certs/signing/ec_key.pem -out certs/signing/ec_cert.pem -days 365 -subj "/O=Turret/OU=Local Development"
+```
+
+Generate a self-signed certificate (used for HTTPS):
+
+```
+mkdir -p ./certs/tls
+cd ./certs/tls
+mkcert turret.localhost
+```
+
+Update your hosts file:
+
+`echo "127.0.0.1 turret.localhost" | sudo tee -a /etc/hosts`
+
 Use the default configuration, suitable for local development:
 
 `cp .env.dist .env`
@@ -58,7 +78,7 @@ Run the local development server:
 
 `yarn watch`
 
-Open the application in your browser at [http://localhost:3000](http://localhost:3000)
+Open the application in your browser at [https://turret.localhost:3000](https://turret.localhost:3000)
 
 ## Architecture
 

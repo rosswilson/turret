@@ -1,6 +1,8 @@
 require("dotenv").config();
 
 const path = require("path");
+const https = require("https");
+const fs = require("fs");
 const express = require("express");
 const helmet = require("helmet");
 const bodyParser = require("body-parser");
@@ -18,6 +20,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(router);
 
-app.listen(port, () =>
-  console.log(`Turret service listening at http://localhost:${port}`)
-);
+const options = {
+  key: fs.readFileSync("./certs/tls/turret.localhost-key.pem"),
+  cert: fs.readFileSync("./certs/tls/turret.localhost.pem"),
+};
+
+https
+  .createServer(options, app)
+  .listen(port, () =>
+    console.log(`Turret service listening at https://turret.localhost:3000`)
+  );

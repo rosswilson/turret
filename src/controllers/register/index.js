@@ -1,5 +1,6 @@
 const validate = require("../../dal/register/validate");
 const persist = require("../../dal/register/persist");
+const { generateSsoToken } = require("../../dal/sign-in");
 
 const TITLE = "Register | Turret";
 
@@ -33,7 +34,16 @@ async function create(request, response) {
   }
 
   try {
-    await persist(value);
+    const { userId } = await persist(value);
+
+    const token = await generateSsoToken(userId);
+
+    response.cookie("turret-sso", token, {
+      maxAge: 1000 * 60 * 60 * 24 * 365 * 2,
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+    });
 
     return response.redirect("/");
   } catch (error) {
