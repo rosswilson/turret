@@ -11,7 +11,7 @@ block content
         if error
           div(role="alert").alert.alert-danger.mt-4.mb-4= error
 
-        form(method='POST' action='/sign-in' novalidate)
+        form(method='POST' action='/sign-in')
           div.form-group
             label(for='email') Email
             input#email.form-control(type='email' name='email' required)
