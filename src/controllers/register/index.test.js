@@ -56,7 +56,7 @@ describe("Register Controller", () => {
         expect(fakeResponse.redirect).toHaveBeenCalledWith("/");
       });
 
-      it("sets a sso token cookie when the payload is valid", async () => {
+      it("sets a sso token cookie", async () => {
         fakeResponse.cookie = jest.fn();
 
         await registerController.create(fakeRequest, fakeResponse);
@@ -90,8 +90,16 @@ describe("Register Controller", () => {
           title: "Register | Turret",
           name: "Ross Wilson",
           email: "",
-          error: "Oops, please complete all the fields",
+          error: "Oops, please complete all the fields.",
         });
+      });
+
+      it("does not set a sso token cookie", async () => {
+        fakeResponse.cookie = jest.fn();
+
+        await registerController.create(fakeRequest, fakeResponse);
+
+        expect(fakeResponse.cookie).not.toHaveBeenCalled();
       });
     });
   });
