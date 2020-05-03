@@ -29,7 +29,7 @@ describe("Register Controller", () => {
     });
   });
 
-  describe.only("create", () => {
+  describe("create", () => {
     it("redirects when the payload is valid", async () => {
       const validPayload = {
         name: "Ross Wilson",
