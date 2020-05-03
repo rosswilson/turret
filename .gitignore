@@ -117,3 +117,6 @@ dist
 
 # Local development certificates
 certs
+
+# Ignore local dotenv configuration file
+.env

@@ -1,28 +1,49 @@
-const { validate } = require("../../dao/register");
+const validate = require("../../dal/register/validate");
+const persist = require("../../dal/register/persist");
 
 const TITLE = "Register | Turret";
 
-function index(request, response) {
-  response.render("register/index", { title: TITLE });
+function render(response, options) {
+  const { initialValues, error } = options;
+
+  response.render("register/index", {
+    title: TITLE,
+    name: initialValues.name,
+    email: initialValues.email,
+    error,
+  });
 }
 
-function create(request, response) {
+function index(request, response) {
+  render(response);
+}
+
+async function create(request, response) {
   const { error, value } = validate(request.body);
 
   if (error) {
-    console.log("Error registering new user", error);
+    console.log("Failed user registration validation", error);
 
-    return response.render("register/index", {
-      title: TITLE,
-      name: value.name,
-      email: value.email,
+    response.status(400);
+
+    return render(response, {
+      initialValues: value,
       error: "Oops, please complete all the fields",
     });
   }
 
-  console.log("TODO register a new user", value);
+  try {
+    await persist(value);
 
-  response.redirect("/");
+    response.redirect("/");
+  } catch (error) {
+    response.status(500);
+
+    return render(response, {
+      initialValues: value,
+      error: "Sorry, something went wrong. Please try again.",
+    });
+  }
 }
 
 module.exports = { index, create };
