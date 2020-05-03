@@ -1,5 +1,7 @@
 # Turret
 
+![](https://github.com/rosswilson/turret/workflows/Node.js/badge.svg)
+
 An open authentication and authorisation platform.
 
 ## Features
