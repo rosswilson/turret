@@ -1,0 +1,95 @@
+const validatePayload = require("./validate");
+
+describe("Validate Payload", () => {
+  const validPayload = {
+    name: "Ross Wilson",
+    email: "ross@example.com",
+    password: "SomeSuperSecurePassword1!",
+    repeatPassword: "SomeSuperSecurePassword1!",
+  };
+
+  it("returns success when a valid payload is validated", () => {
+    const result = validatePayload(validPayload);
+
+    expect(result.error).toBeUndefined();
+  });
+
+  it("validates the name is present", () => {
+    const result = validatePayload({
+      ...validPayload,
+      name: undefined,
+    });
+
+    const [firstError] = result.error.details;
+
+    expect(firstError.message).toBe('"name" is required');
+  });
+
+  it("validates the email is present", () => {
+    const result = validatePayload({
+      ...validPayload,
+      email: undefined,
+    });
+
+    const [firstError] = result.error.details;
+
+    expect(firstError.message).toBe('"email" is required');
+  });
+
+  it("validates the email is a valid email address", () => {
+    const result = validatePayload({
+      ...validPayload,
+      email: "ross",
+    });
+
+    const [firstError] = result.error.details;
+
+    expect(firstError.message).toBe('"email" must be a valid email');
+  });
+
+  it("validates the password is present", () => {
+    const result = validatePayload({
+      ...validPayload,
+      password: undefined,
+    });
+
+    const [firstError] = result.error.details;
+
+    expect(firstError.message).toBe('"password" is required');
+  });
+
+  it("validates the password is long enough", () => {
+    const result = validatePayload({
+      ...validPayload,
+      password: "123",
+    });
+
+    const [firstError] = result.error.details;
+
+    expect(firstError.message).toBe(
+      '"password" length must be at least 8 characters long'
+    );
+  });
+
+  it("validates the repeat password is present", () => {
+    const result = validatePayload({
+      ...validPayload,
+      repeatPassword: undefined,
+    });
+
+    const [firstError] = result.error.details;
+
+    expect(firstError.message).toBe('"repeatPassword" is required');
+  });
+
+  it("validates the repeat password matches the password", () => {
+    const result = validatePayload({
+      ...validPayload,
+      repeatPassword: "somethingElse",
+    });
+
+    const [firstError] = result.error.details;
+
+    expect(firstError.message).toBe('"repeatPassword" must be [ref:password]');
+  });
+});

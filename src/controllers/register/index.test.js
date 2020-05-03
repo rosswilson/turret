@@ -1,5 +1,8 @@
 const httpMocks = require("node-mocks-http");
 const registerController = require(".");
+const persist = require("../../dal/register/persist");
+
+jest.mock("../../dal/register/persist");
 
 jest.spyOn(console, "log").mockImplementation(() => {});
 
@@ -10,6 +13,8 @@ describe("Register Controller", () => {
   beforeEach(() => {
     fakeRequest = httpMocks.createRequest();
     fakeResponse = httpMocks.createResponse();
+
+    persist.mockResolvedValue();
   });
 
   describe("index", () => {
@@ -25,7 +30,7 @@ describe("Register Controller", () => {
   });
 
   describe.only("create", () => {
-    it("redirects when the payload is valid", () => {
+    it("redirects when the payload is valid", async () => {
       const validPayload = {
         name: "Ross Wilson",
         email: "ross@example.com",
@@ -37,24 +42,24 @@ describe("Register Controller", () => {
 
       fakeResponse.redirect = jest.fn();
 
-      registerController.create(fakeRequest, fakeResponse);
+      await registerController.create(fakeRequest, fakeResponse);
 
       expect(fakeResponse.redirect).toHaveBeenCalledWith("/");
     });
 
-    it("re-renders when the payload is invalid", () => {
-      const validPayload = {
+    it("re-renders when the payload is invalid", async () => {
+      const invalidPayload = {
         name: "Ross Wilson",
         email: "",
         password: "SomeSuperSecurePassword1!",
         repeatPassword: "NotTheRepeatedPassword",
       };
 
-      fakeRequest.body = validPayload;
+      fakeRequest.body = invalidPayload;
 
       fakeResponse.render = jest.fn();
 
-      registerController.create(fakeRequest, fakeResponse);
+      await registerController.create(fakeRequest, fakeResponse);
 
       expect(fakeResponse.render).toHaveBeenCalledWith("register/index", {
         title: "Register | Turret",
