@@ -3,6 +3,7 @@ const rootController = require("./controllers/root");
 const signInController = require("./controllers/sign-in");
 const registerController = require("./controllers/register");
 const statusController = require("./controllers/status");
+const authoriseController = require("./controllers/authorise");
 
 const router = express.Router();
 
@@ -15,5 +16,7 @@ router.get("/register", registerController.index);
 router.post("/register", registerController.create);
 
 router.get("/status", statusController.index);
+
+router.get("/authorise", authoriseController.index);
 
 module.exports = router;
