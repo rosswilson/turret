@@ -91,6 +91,10 @@ Run the local development server:
 
 Open the application in your browser at [https://turret.localhost:3000](https://turret.localhost:3000)
 
+## Future Development
+
+Future development tasks are being tracked using this GitHub [project board](https://github.com/rosswilson/turret/projects/1).
+
 ## Architecture
 
 TODO
