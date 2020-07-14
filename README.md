@@ -12,8 +12,7 @@ An open authentication and authorisation platform.
   <img src="./docs/screenshots/register.png" alt="registration form with name, email, password, and password repeat fields" width="300">
 </a>
 
-- Form
-- Validation
+- Form validation
 - Persistance to DynamoDB
   - Generating a UUID identifier for every user
   - Downcases email address for case-insensitive searching
@@ -25,8 +24,7 @@ An open authentication and authorisation platform.
   <img src="./docs/screenshots/sign-in.png" alt="sign-in form with email and password fields" width="300">
 </a>
 
-- Form
-- Validation
+- Form validation
 - Defence against timing attacks when comparing password hashes
 - Issuing of a Single Sign On token (JWT), signed with a private key
 
