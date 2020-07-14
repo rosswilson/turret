@@ -37,11 +37,9 @@ git clone git@github.com:rosswilson/turret.git
 cd turret
 ```
 
-Follow [this AWS guide](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html) to run a local DynamoDB server.
+Start a local DynamoDB server:
 
-Start the DynamoDB server:
-
-`java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb`
+`docker run -p 8000:8000 amazon/dynamodb-local`
 
 Create a `Users` table in DynamoDB:
 
