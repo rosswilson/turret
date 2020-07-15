@@ -51,6 +51,16 @@ aws --endpoint-url http://localhost:8000 dynamodb create-table \
     --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
 ```
 
+Create a `AuthCodes` table in DynamoDB:
+
+```
+aws --endpoint-url http://localhost:8000 dynamodb create-table \
+    --table-name AuthCodes \
+    --attribute-definitions AttributeName=AuthCode,AttributeType=S \
+    --key-schema AttributeName=AuthCode,KeyType=HASH \
+    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+```
+
 Generate a ECDSA key pair (used for signing tokens):
 
 ```
