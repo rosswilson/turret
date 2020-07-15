@@ -2,6 +2,7 @@ const express = require("express");
 const rootController = require("./controllers/root");
 const signInController = require("./controllers/sign-in");
 const registerController = require("./controllers/register");
+const authoriseController = require("./controllers/authorise");
 const statusController = require("./controllers/status");
 
 const router = express.Router();
@@ -13,6 +14,8 @@ router.post("/sign-in", signInController.create);
 
 router.get("/register", registerController.index);
 router.post("/register", registerController.create);
+
+router.get("/authorise", authoriseController.create);
 
 router.get("/status", statusController.index);
 
