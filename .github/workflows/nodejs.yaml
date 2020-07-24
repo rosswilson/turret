@@ -43,6 +43,7 @@ jobs:
 
       - name: Generate signing certs
         run: |
+          mkdir -p ./certs/signing
           openssl ecparam -out certs/signing/ec_key.pem -name prime256v1 -genkey
           openssl req -new -x509 -key certs/signing/ec_key.pem -out certs/signing/ec_cert.pem -days 365 -subj "/O=Turret/OU=Local Development"
 
