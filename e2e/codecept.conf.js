@@ -4,6 +4,10 @@ const { setHeadlessWhen } = require("@codeceptjs/configure");
 // HEADLESS=true npx codecept run
 setHeadlessWhen(process.env.HEADLESS);
 
+const chromePath = process.env.USE_BUNDLED_CHROME
+  ? undefined
+  : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+
 exports.config = {
   tests: "./*_test.js",
   output: "./output",
@@ -14,8 +18,7 @@ exports.config = {
       windowSize: "1200x900",
       chrome: {
         ignoreHTTPSErrors: true,
-        executablePath:
-          "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        executablePath: chromePath,
       },
     },
   },

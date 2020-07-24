@@ -71,3 +71,5 @@ jobs:
 
       - name: Test End-to-end
         run: yarn test:e2e
+        env:
+          USE_BUNDLED_CHROME: true
