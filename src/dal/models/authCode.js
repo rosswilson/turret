@@ -15,6 +15,10 @@ AuthCode.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    audience: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     clientId: {
       type: DataTypes.STRING,
       allowNull: false,

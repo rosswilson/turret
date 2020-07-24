@@ -17,13 +17,14 @@ function generateToken() {
 }
 
 async function create(payload) {
-  const { clientId, redirectUri, scope, userId } = payload;
+  const { audience, clientId, redirectUri, scope, userId } = payload;
 
   try {
     const authCode = await generateToken();
 
     const params = {
       id: uuidv4(),
+      audience,
       authCode,
       clientId,
       redirectUri,
