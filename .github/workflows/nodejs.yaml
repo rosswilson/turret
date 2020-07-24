@@ -34,11 +34,15 @@ jobs:
 
       - name: Setup local HTTPS
         run: |
+          apt install libnss3-tools
           wget https://github.com/FiloSottile/mkcert/releases/download/v1.1.2/mkcert-v1.1.2-linux-amd64
           mv mkcert-v1.1.2-linux-amd64 mkcert
           chmod +x mkcert
           ./mkcert -install
-          mkcert turret.localhost
+          ./mkcert turret.localhost
+
+      - name: Generate signing certs
+        run: openssl --version
 
       - name: Cache npm dependencies
         id: cache-dependencies
