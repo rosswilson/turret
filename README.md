@@ -108,7 +108,12 @@ TODO
 
 ## Testing
 
-TODO
+Run `yarn test` to run the unit tests.
+
+Run `yarn test:e2e` to run end-to-end tests using [CodeceptJS](https://codecept.io/) in a real Chrome browser.
+Tests run using HTTPS and exercise the database too.
+
+![](./docs/e2e.gif)
 
 ## Deployment
 
