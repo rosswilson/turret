@@ -42,7 +42,9 @@ jobs:
           ./mkcert turret.localhost
 
       - name: Generate signing certs
-        run: openssl --version
+        run: |
+          openssl ecparam -out certs/signing/ec_key.pem -name prime256v1 -genkey
+          openssl req -new -x509 -key certs/signing/ec_key.pem -out certs/signing/ec_cert.pem -days 365 -subj "/O=Turret/OU=Local Development"
 
       - name: Cache npm dependencies
         id: cache-dependencies
