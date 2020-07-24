@@ -123,3 +123,6 @@ certs
 
 # Ignore temporary files, like the Docker postgres volume
 /tmp
+
+# Ignore CodeceptJS output directory (like test failure screenshots)
+/e2e/output
