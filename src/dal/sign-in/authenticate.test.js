@@ -1,33 +1,22 @@
-const DynamoDB = require("aws-sdk/clients/dynamodb");
 const bcrypt = require("bcrypt");
+const User = require("../models/user");
 const authenticate = require("./authenticate");
 
+jest.mock("../models/user");
 jest.mock("bcrypt");
 
-jest.mock("aws-sdk/clients/dynamodb");
-
 describe("Authentication", () => {
-  let fakeGetPromise;
-
   const payload = {
     email: "ross@example.com",
     password: "SomeSuperSecurePassword1!",
   };
 
   beforeEach(() => {
-    fakeGetPromise = jest.fn().mockResolvedValue({
-      Item: {
-        Identifier: "ross@example.com",
-        ID: "905abe3d-69ce-492b-8d30-c400ae2bcee4",
-        Name: "Ross Wilson",
-        PasswordHash: "somePasswordHash",
-      },
-    });
-
-    DynamoDB.DocumentClient.mockReturnValue({
-      get: jest.fn().mockReturnValue({
-        promise: fakeGetPromise,
-      }),
+    User.findOne.mockResolvedValue({
+      id: "905abe3d-69ce-492b-8d30-c400ae2bcee4",
+      email: "ross@example.com",
+      name: "Ross Wilson",
+      passwordHash: "somePasswordHash",
     });
   });
 
@@ -80,15 +69,7 @@ describe("Authentication", () => {
 
   describe("when the user cannot be found in the database", () => {
     beforeEach(() => {
-      fakeGetPromise = jest.fn().mockResolvedValue({
-        Item: {},
-      });
-
-      DynamoDB.DocumentClient.mockReturnValue({
-        get: jest.fn().mockReturnValue({
-          promise: fakeGetPromise,
-        }),
-      });
+      User.findOne.mockResolvedValue(null);
     });
 
     it("returns a failure response", async () => {

@@ -34,4 +34,18 @@ async function generateSsoToken(userId) {
   });
 }
 
-module.exports = { generateSsoToken };
+async function verifySsoToken(ssoToken) {
+  if (!ssoToken) {
+    throw Error("A SSO token must be supplied");
+  }
+
+  const privateKey = await getSigningKey();
+
+  return jwt.verify(ssoToken, privateKey, {
+    algorithms: ["ES256"],
+    audience: "turret-sso",
+    issuer: "turret-sso",
+  });
+}
+
+module.exports = { generateSsoToken, verifySsoToken };

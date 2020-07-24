@@ -1,35 +1,21 @@
-const DynamoDB = require("aws-sdk/clients/dynamodb");
+const User = require("../models/user");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 
 const SALT_ROUNDS = 8;
 
 async function create(payload) {
-  const documentClient = new DynamoDB.DocumentClient({
-    endpoint: "http://localhost:8000",
-    region: "eu-west-1",
-  });
-
   const { name, email, password } = payload;
 
+  const userId = uuidv4();
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
-  const userId = uuidv4();
-
-  const params = {
-    TableName: "Users",
-    Item: {
-      Identifier: email.toLowerCase(),
-      ID: userId,
-      Name: name,
-      PasswordHash: passwordHash,
-    },
-  };
+  const params = { id: userId, name, email: email.toLowerCase(), passwordHash };
 
   console.debug("Recording user in database", params);
 
   try {
-    await documentClient.put(params).promise();
+    await User.create(params);
 
     return { userId };
   } catch (error) {
