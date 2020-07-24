@@ -13,7 +13,7 @@ An open authentication and authorisation platform.
 </a>
 
 - Form validation
-- Persistance to DynamoDB
+- Persistance to PostgreSQL
   - Generating a UUID identifier for every user
   - Downcases email address for case-insensitive searching
 - Issuing of a Single Sign On token (JWT), signed with a private key
@@ -28,6 +28,12 @@ An open authentication and authorisation platform.
 - Defence against timing attacks when comparing password hashes
 - Issuing of a Single Sign On token (JWT), signed with a private key
 
+### Authorization Code Flow
+
+- Issuing an Auth Code if the user is signed in
+- Redirects to Sign In page if user is not signed in
+- Persists Auth Code to database, referencing the user that it belongs to
+
 ## Getting Started
 
 Clone the repo:
@@ -37,28 +43,18 @@ git clone git@github.com:rosswilson/turret.git
 cd turret
 ```
 
-Start a local DynamoDB server:
-
-`docker run -p 8000:8000 amazon/dynamodb-local`
-
-Create a `Users` table in DynamoDB:
+Start a local PostgreSQL server:
 
 ```
-aws --endpoint-url http://localhost:8000 dynamodb create-table \
-    --table-name Users \
-    --attribute-definitions AttributeName=Identifier,AttributeType=S \
-    --key-schema AttributeName=Identifier,KeyType=HASH \
-    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
-```
-
-Create a `AuthCodes` table in DynamoDB:
-
-```
-aws --endpoint-url http://localhost:8000 dynamodb create-table \
-    --table-name AuthCodes \
-    --attribute-definitions AttributeName=AuthCode,AttributeType=S \
-    --key-schema AttributeName=AuthCode,KeyType=HASH \
-    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+docker run \
+  -d \
+  --name turret-db \
+  -p 5433:5432 \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_USER=turret_dev \
+  -e POSTGRES_DB=turret_dev \
+  -v $(pwd)/tmp/db-data:/var/lib/postgresql/data \
+  postgres
 ```
 
 Generate a ECDSA key pair (used for signing tokens):
@@ -88,6 +84,10 @@ Use the default configuration, suitable for local development:
 Install the npm dependencies:
 
 `yarn`
+
+Syncronise the database to create the tables and fields:
+
+`node scripts/syncDatabase.js`
 
 Run the tests to confirm you're all set up:
 

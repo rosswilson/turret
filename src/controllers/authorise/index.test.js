@@ -10,9 +10,17 @@ describe("Authorise Controller", () => {
   let fakeRequest;
   let fakeResponse;
 
+  const fakeUserId = "someFakeUserId";
+
   beforeEach(() => {
     fakeRequest = httpMocks.createRequest();
     fakeResponse = httpMocks.createResponse();
+
+    fakeResponse.locals = {
+      parsedJwt: {
+        sub: fakeUserId,
+      },
+    };
   });
 
   describe("create", () => {
@@ -45,6 +53,7 @@ describe("Authorise Controller", () => {
         clientId: fakeClientId,
         redirectUri: fakeRedirectUri,
         scope: fakeScope,
+        userId: fakeUserId,
       });
     });
 

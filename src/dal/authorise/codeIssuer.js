@@ -1,7 +1,8 @@
 const crypto = require("crypto");
-const DynamoDB = require("aws-sdk/clients/dynamodb");
+const { v4: uuidv4 } = require("uuid");
+const AuthCode = require("../models/authCode");
 
-const CODE_LENGTH_IN_BYTES = 48;
+const CODE_LENGTH_IN_BYTES = 24;
 
 function generateToken() {
   return new Promise((resolve, reject) => {
@@ -16,29 +17,23 @@ function generateToken() {
 }
 
 async function create(payload) {
-  const { clientId, redirectUri, scope } = payload;
+  const { clientId, redirectUri, scope, userId } = payload;
 
   try {
-    const documentClient = new DynamoDB.DocumentClient({
-      endpoint: "http://localhost:8000",
-      region: "eu-west-1",
-    });
-
     const authCode = await generateToken();
 
     const params = {
-      TableName: "AuthCodes",
-      Item: {
-        AuthCode: authCode,
-        ClientId: clientId,
-        RedirectUri: redirectUri,
-        Scope: scope,
-      },
+      id: uuidv4(),
+      authCode,
+      clientId,
+      redirectUri,
+      scope,
+      userId,
     };
 
     console.debug("Recording authorisation code in database", params);
 
-    await documentClient.put(params).promise();
+    await AuthCode.create(params);
 
     return authCode;
   } catch (error) {

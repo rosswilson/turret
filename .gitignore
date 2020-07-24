@@ -120,3 +120,6 @@ certs
 
 # Ignore local dotenv configuration file
 .env
+
+# Ignore temporary files, like the Docker postgres volume
+/tmp

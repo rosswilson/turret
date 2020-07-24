@@ -1,39 +1,36 @@
-const DynamoDB = require("aws-sdk/clients/dynamodb");
 const crypto = require("crypto");
+const { v4: uuidv4 } = require("uuid");
+const AuthCode = require("../models/authCode");
 const codeIssuer = require("./codeIssuer");
 
 jest.spyOn(console, "debug").mockImplementation(() => {});
+jest.spyOn(console, "error").mockImplementation(() => {});
 
-jest.mock("aws-sdk/clients/dynamodb");
 jest.mock("crypto");
+jest.mock("uuid");
+jest.mock("../models/authCode");
 
 describe("Authorisation Code Issuer", () => {
-  let fakePutPromise;
-  let fakePut;
-
   let validPayload;
 
-  const fakeRandomString = "someRandomString";
+  const fakeAuthCodeString = "someRandomString";
+  const fakeUuid = "someFakeUuid";
+  const fakeUserId = "someFakeUserId";
 
   beforeEach(() => {
-    fakePutPromise = jest.fn().mockResolvedValue();
-
-    fakePut = jest.fn().mockReturnValue({
-      promise: fakePutPromise,
-    });
-
-    DynamoDB.DocumentClient.mockReturnValue({
-      put: fakePut,
-    });
-
     crypto.randomBytes.mockImplementation((length, callback) => {
-      return callback(null, fakeRandomString);
+      return callback(null, fakeAuthCodeString);
     });
+
+    uuidv4.mockReturnValue(fakeUuid);
+
+    AuthCode.create.mockResolvedValue(undefined);
 
     validPayload = {
       clientId: "someClientId",
       redirectUri: "https://www.example.com/callback",
       scope: "scope1 scope2 scope3",
+      userId: fakeUserId,
     };
   });
 
@@ -41,27 +38,75 @@ describe("Authorisation Code Issuer", () => {
     it("returns a random authorisation code", async () => {
       const result = await codeIssuer(validPayload);
 
-      expect(result).toBe(fakeRandomString);
+      expect(result).toBe(fakeAuthCodeString);
     });
 
-    it("generates a random string with 48 characters", async () => {
+    it("generates a random string of 24 bytes", async () => {
       await codeIssuer(validPayload);
 
-      expect(crypto.randomBytes).toHaveBeenCalledWith(48, expect.any(Function));
+      expect(crypto.randomBytes).toHaveBeenCalledWith(24, expect.any(Function));
     });
 
     it("stores the auth code in the database", async () => {
       await codeIssuer(validPayload);
 
-      expect(fakePut).toHaveBeenCalledWith({
-        Item: {
-          AuthCode: fakeRandomString,
-          ClientId: "someClientId",
-          RedirectUri: "https://www.example.com/callback",
-          Scope: "scope1 scope2 scope3",
-        },
-        TableName: "AuthCodes",
+      expect(AuthCode.create).toHaveBeenCalledWith({
+        id: fakeUuid,
+        authCode: fakeAuthCodeString,
+        clientId: "someClientId",
+        redirectUri: "https://www.example.com/callback",
+        scope: "scope1 scope2 scope3",
+        userId: fakeUserId,
       });
+    });
+
+    it("logs a debug message", async () => {
+      await codeIssuer(validPayload);
+
+      expect(console.debug).toHaveBeenCalledWith(
+        "Recording authorisation code in database",
+        {
+          id: fakeUuid,
+          authCode: fakeAuthCodeString,
+          clientId: "someClientId",
+          redirectUri: "https://www.example.com/callback",
+          scope: "scope1 scope2 scope3",
+          userId: fakeUserId,
+        }
+      );
+    });
+  });
+
+  describe("error issuing an auth code", () => {
+    const thrownError = new Error("Some fake error");
+
+    beforeEach(() => {
+      AuthCode.create.mockImplementation(() => {
+        throw thrownError;
+      });
+    });
+
+    it("throws an error", async (done) => {
+      try {
+        await codeIssuer(validPayload);
+      } catch (error) {
+        expect(error).toBe(thrownError);
+
+        done();
+      }
+    });
+
+    it("logs the error", async (done) => {
+      try {
+        await codeIssuer(validPayload);
+      } catch (error) {
+        expect(console.error).toHaveBeenCalledWith(
+          "Error when issuing authorisation code",
+          thrownError
+        );
+
+        done();
+      }
     });
   });
 });
