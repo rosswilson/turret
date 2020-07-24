@@ -32,6 +32,14 @@ jobs:
         with:
           node-version: "12.16.0"
 
+      - name: Setup local HTTPS
+        run: |
+          wget https://github.com/FiloSottile/mkcert/releases/download/v1.1.2/mkcert-v1.1.2-linux-amd64
+          mv mkcert-v1.1.2-linux-amd64 mkcert
+          chmod +x mkcert
+          ./mkcert -install
+          mkcert turret.localhost
+
       - name: Cache npm dependencies
         id: cache-dependencies
         uses: actions/cache@v1
