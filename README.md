@@ -69,8 +69,7 @@ Generate a self-signed certificate (used for HTTPS):
 
 ```
 mkdir -p ./certs/tls
-cd ./certs/tls
-mkcert turret.localhost
+mkcert -cert-file ./certs/tls/turret.localhost.pem --key-file certs/tls/turret.localhost-key.pem turret.localhost
 ```
 
 Update your hosts file:
