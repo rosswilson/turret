@@ -32,7 +32,15 @@ jobs:
         with:
           node-version: "12.16.0"
 
+      - name: Cache test-only certs
+        id: cache-certs
+        uses: actions/cache@v1
+        with:
+          path: certs
+          key: ${{ runner.OS }}-build-version-1
+
       - name: Setup local HTTPS
+        if: steps.cache-certs.outputs.cache-hit != 'true'
         run: |
           sudo apt install libnss3-tools
           wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-linux-amd64
@@ -43,6 +51,7 @@ jobs:
           ./mkcert -cert-file ./certs/tls/turret.localhost.pem --key-file certs/tls/turret.localhost-key.pem turret.localhost
 
       - name: Generate signing certs
+        if: steps.cache-certs.outputs.cache-hit != 'true'
         run: |
           mkdir -p ./certs/signing
           openssl ecparam -out certs/signing/ec_key.pem -name prime256v1 -genkey
@@ -74,4 +83,5 @@ jobs:
       - name: Test End-to-end
         run: yarn test:e2e
         env:
+          HEADLESS: true
           USE_BUNDLED_CHROME: true
