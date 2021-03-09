@@ -1,4 +1,5 @@
 const { setHeadlessWhen } = require("@codeceptjs/configure");
+const { bootstrap, teardown } = require("./bootstrap");
 
 // turn on headless mode when running with HEADLESS=true environment variable
 // HEADLESS=true npx codecept run
@@ -25,8 +26,8 @@ exports.config = {
   include: {
     I: "./steps_file.js",
   },
-  bootstrap: "./bootstrap.js",
-  teardown: "./bootstrap.js",
+  bootstrap,
+  teardown,
   mocha: {},
   name: "turret",
   plugins: {

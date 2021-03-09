@@ -1,20 +1,24 @@
 const server = require("../src/server");
 const database = require("../src/dal/database");
 
-function bootstrap(done) {
-  server.listen(3000, async () => {
-    await database.init();
+async function bootstrap() {
+  return new Promise((resolve) => {
+    server.listen(3000, async () => {
+      await database.init();
 
-    done();
+      resolve();
+    });
   });
 }
 
-function teardown(done) {
-  server.close();
+async function teardown() {
+  return new Promise((resolve) => {
+    server.close();
 
-  database.sequelize.close();
+    database.sequelize.close();
 
-  done();
+    resolve();
+  });
 }
 
 module.exports = { bootstrap, teardown };

@@ -1,6 +1,6 @@
 Feature("Register");
 
-Scenario("Successfully register a user", (I) => {
+Scenario("Successfully register a user", ({ I }) => {
   I.amOnPage("https://turret.localhost:3000");
 
   I.see("A demonstration of OIDC flows and a general playground");

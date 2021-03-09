@@ -126,3 +126,6 @@ certs
 
 # Ignore CodeceptJS output directory (like test failure screenshots)
 /e2e/output
+
+# Husky files
+.husky
