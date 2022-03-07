@@ -54,7 +54,7 @@ docker run \
   -e POSTGRES_USER=turret_dev \
   -e POSTGRES_DB=turret_dev \
   -v $(pwd)/tmp/db-data:/var/lib/postgresql/data \
-  postgres
+  postgres:13
 ```
 
 Generate a ECDSA key pair (used for signing tokens):
