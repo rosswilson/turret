@@ -1,4 +1,4 @@
-const Joi = require("@hapi/joi");
+const Joi = require("joi");
 
 const nameSchema = Joi.string().trim().max(50).required();
 

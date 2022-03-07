@@ -3,8 +3,8 @@ const { v4: uuidv4 } = require("uuid");
 const AuthCode = require("../models/authCode");
 const codeIssuer = require("./codeIssuer");
 
-jest.spyOn(console, "debug").mockImplementation(() => {});
-jest.spyOn(console, "error").mockImplementation(() => {});
+jest.spyOn(console, "debug").mockImplementation(() => { });
+jest.spyOn(console, "error").mockImplementation(() => { });
 
 jest.mock("crypto");
 jest.mock("uuid");
@@ -86,17 +86,19 @@ describe("Authorisation Code Issuer", () => {
       });
     });
 
-    it("throws an error", async (done) => {
+    it("throws an error", async () => {
+      expect.assertions(1);
+
       try {
         await codeIssuer(validPayload);
       } catch (error) {
         expect(error).toBe(thrownError);
-
-        done();
       }
     });
 
-    it("logs the error", async (done) => {
+    it("logs the error", async () => {
+      expect.assertions(1);
+
       try {
         await codeIssuer(validPayload);
       } catch (error) {
@@ -104,8 +106,6 @@ describe("Authorisation Code Issuer", () => {
           "Error when issuing authorisation code",
           thrownError
         );
-
-        done();
       }
     });
   });
