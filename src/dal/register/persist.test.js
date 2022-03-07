@@ -3,8 +3,8 @@ const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const persist = require("./persist");
 
-jest.spyOn(console, "error").mockImplementation(() => {});
-jest.spyOn(console, "debug").mockImplementation(() => {});
+jest.spyOn(console, "error").mockImplementation(() => { });
+jest.spyOn(console, "debug").mockImplementation(() => { });
 
 jest.mock("../models/user");
 jest.mock("uuid");
@@ -90,17 +90,19 @@ describe("Persist User", () => {
       });
     });
 
-    it("throws", async (done) => {
+    it("throws", async () => {
+      expect.assertions(1);
+
       try {
         await persist(validPayload);
       } catch (error) {
         expect(error).toBe(fakeError);
-
-        done();
       }
     });
 
-    it("logs the error", async (done) => {
+    it("logs the error", async () => {
+      expect.assertions(1);
+
       try {
         await persist(validPayload);
       } catch (error) {
@@ -108,8 +110,6 @@ describe("Persist User", () => {
           "Error when persisting user into database",
           fakeError
         );
-
-        done();
       }
     });
   });

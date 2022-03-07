@@ -34,9 +34,9 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^16.0.0",
     "express": "^4.17.1",
-    "helmet": "^4.4.1",
+    "helmet": "^5.0.2",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.3.0",
     "pug": "^3.0.1",
@@ -45,15 +45,15 @@
   },
   "devDependencies": {
     "codeceptjs": "^3.0.5",
-    "eslint": "^7.21.0",
+    "eslint": "^8.10.0",
     "eslint-plugin-codeceptjs": "^1.3.0",
-    "husky": "^5.1.3",
-    "jest": "^26.6.3",
+    "husky": "^7.0.4",
+    "jest": "^27.5.1",
     "lint-staged": ">=10",
     "node-mocks-http": "^1.8.1",
     "nodemon": "^2.0.3",
     "prettier": "^2.0.5",
-    "puppeteer": "^8.0.0"
+    "puppeteer": "^13.4.1"
   },
   "husky": {
     "hooks": {
